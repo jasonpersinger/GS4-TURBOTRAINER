@@ -462,11 +462,14 @@
   // This avoids manual string escaping and runs in the context of the trainer page.
   function turboTrainer() {
     var STEPS = [5, 10];
-    var S = 'font-size:11px;cursor:pointer;margin:0 2px;padding:2px 5px;vertical-align:middle;';
+    var S = 'font-size:11px;cursor:pointer;margin:0 2px;padding:2px 5px;'
+          + 'vertical-align:middle;line-height:1;display:inline-block;'
+          + 'background:#e8e8e8;border:1px solid #999;color:#333;';
 
     function mk(label, fn) {
       var b = document.createElement('button');
       b.textContent = label;
+      b.type = 'button';   // prevents form submission
       b.style.cssText = S;
       b.addEventListener('click', fn);
       return b;
