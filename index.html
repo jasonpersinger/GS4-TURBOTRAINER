@@ -239,7 +239,9 @@
         var a = el.querySelector('td > a');
         if (a) name = a.textContent.trim();
       }
-      skills.push({ id: id, name: name });
+      var rankEl = document.getElementById('amt_skill' + id);
+      var rank = rankEl ? rankEl.textContent.trim() : '';
+      skills.push({ id: id, name: name, rank: rank });
     });
 
     if (!skills.length) { alert('TurboTrainer: no skills found on this page.'); return; }
@@ -282,6 +284,12 @@
       nameEl.style.cssText = 'flex:1;font-size:13px;color:#aaa;';
       row.appendChild(nameEl);
 
+      var rankEl = document.createElement('span');
+      rankEl.id = 'tt-rank-' + sk.id;
+      rankEl.textContent = sk.rank;
+      rankEl.style.cssText = 'font-size:13px;color:#e8e8e8;min-width:36px;text-align:right;margin-right:10px;';
+      row.appendChild(rankEl);
+
       var grp = document.createElement('div');
       grp.style.cssText = 'display:flex;gap:3px;flex-shrink:0;';
 
@@ -291,7 +299,12 @@
         b.type = 'button';
         b.style.cssText = M + 'background:#1e1a0e;border:1px solid #c8a84a;color:#c8a84a;'
           + 'font-size:11px;padding:3px 8px;cursor:pointer;';
-        b.addEventListener('click', function () { for (var i = 0; i < n; i++) upskill(sk.id); });
+        b.addEventListener('click', function () {
+          for (var i = 0; i < n; i++) upskill(sk.id);
+          var r = document.getElementById('amt_skill' + sk.id);
+          var d = document.getElementById('tt-rank-' + sk.id);
+          if (r && d) d.textContent = r.textContent.trim();
+        });
         grp.appendChild(b);
       });
 
@@ -305,7 +318,12 @@
         b.type = 'button';
         b.style.cssText = M + 'background:#141414;border:1px solid #3a3a3a;color:#666;'
           + 'font-size:11px;padding:3px 8px;cursor:pointer;';
-        b.addEventListener('click', function () { for (var i = 0; i < n; i++) downskill(sk.id); });
+        b.addEventListener('click', function () {
+          for (var i = 0; i < n; i++) downskill(sk.id);
+          var r = document.getElementById('amt_skill' + sk.id);
+          var d = document.getElementById('tt-rank-' + sk.id);
+          if (r && d) d.textContent = r.textContent.trim();
+        });
         grp.appendChild(b);
       });
 
