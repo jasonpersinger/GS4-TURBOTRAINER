@@ -297,16 +297,12 @@
     var hrow = document.createElement('div');
     hrow.style.cssText = ROWBASE + 'border-bottom:1px solid #2e2e2e;background:#1a1a1a;position:sticky;top:0;';
     var HL = 'font-size:10px;letter-spacing:2px;color:#555;text-transform:uppercase;';
-    [['name','Skill Name'],['cost','Train Cost'],['rank','Ranks'],['max','Max'],['recover','Recover Cost']].forEach(function(pair) {
+    [['recover','Recover'],['btns',''],['rank','Ranks'],['btns',''],['cost','Cost'],['max','Max'],['name','Skill Name']].forEach(function(pair) {
       var h = document.createElement('span');
       h.textContent = pair[1];
       h.style.cssText = HL + COL[pair[0]];
       hrow.appendChild(h);
     });
-    var hbtns = document.createElement('span');
-    hbtns.style.cssText = HL + 'width:220px;text-align:center;';
-    hbtns.textContent = 'adjust';
-    hrow.appendChild(hbtns);
     list.appendChild(hrow);
 
     skills.forEach(function (sk) {
@@ -315,15 +311,29 @@
       row.onmouseover = function () { row.style.background = '#1a1a1a'; };
       row.onmouseout  = function () { row.style.background = ''; };
 
-      var nameEl = document.createElement('span');
-      nameEl.textContent = sk.name;
-      nameEl.style.cssText = 'font-size:13px;color:#aaa;' + COL.name;
-      row.appendChild(nameEl);
+      var refresh = function () {
+        var src = document.getElementById('amt_skill' + sk.id);
+        var dst = document.getElementById('tt-rank-' + sk.id);
+        if (src && dst) dst.textContent = src.textContent.trim();
+      };
 
-      var costEl = document.createElement('span');
-      costEl.textContent = sk.cost;
-      costEl.style.cssText = 'font-size:12px;color:#666;' + COL.cost;
-      row.appendChild(costEl);
+      var recEl = document.createElement('span');
+      recEl.textContent = sk.recover;
+      recEl.style.cssText = 'font-size:12px;color:#666;' + COL.recover;
+      row.appendChild(recEl);
+
+      var minusGrp = document.createElement('div');
+      minusGrp.style.cssText = COL.btns;
+      [10, 5, 1].forEach(function (n) {
+        var b = document.createElement('button');
+        b.textContent = '-' + n;
+        b.type = 'button';
+        b.style.cssText = M + 'background:#141414;border:1px solid #3a3a3a;color:#666;'
+          + 'font-size:11px;padding:3px 8px;cursor:pointer;';
+        b.addEventListener('click', function () { for (var i = 0; i < n; i++) downskill(sk.id); refresh(); });
+        minusGrp.appendChild(b);
+      });
+      row.appendChild(minusGrp);
 
       var rankEl = document.createElement('span');
       rankEl.id = 'tt-rank-' + sk.id;
@@ -331,50 +341,34 @@
       rankEl.style.cssText = 'font-size:13px;color:#e8e8e8;font-weight:bold;' + COL.rank;
       row.appendChild(rankEl);
 
-      var maxEl = document.createElement('span');
-      maxEl.textContent = sk.max;
-      maxEl.style.cssText = 'font-size:12px;color:#555;' + COL.max;
-      row.appendChild(maxEl);
-
-      var recEl = document.createElement('span');
-      recEl.textContent = sk.recover;
-      recEl.style.cssText = 'font-size:12px;color:#666;' + COL.recover;
-      row.appendChild(recEl);
-
-      var grp = document.createElement('div');
-      grp.style.cssText = COL.btns;
-
-      var refresh = function () {
-        var src = document.getElementById('amt_skill' + sk.id);
-        var dst = document.getElementById('tt-rank-' + sk.id);
-        if (src && dst) dst.textContent = src.textContent.trim();
-      };
-
-      [10, 5, 1].forEach(function (n) {
+      var plusGrp = document.createElement('div');
+      plusGrp.style.cssText = COL.btns;
+      [1, 5, 10].forEach(function (n) {
         var b = document.createElement('button');
         b.textContent = '+' + n;
         b.type = 'button';
         b.style.cssText = M + 'background:#1e1a0e;border:1px solid #c8a84a;color:#c8a84a;'
           + 'font-size:11px;padding:3px 8px;cursor:pointer;';
         b.addEventListener('click', function () { for (var i = 0; i < n; i++) upskill(sk.id); refresh(); });
-        grp.appendChild(b);
+        plusGrp.appendChild(b);
       });
+      row.appendChild(plusGrp);
 
-      var sep = document.createElement('div');
-      sep.style.cssText = 'width:1px;background:#2e2e2e;margin:0 3px;align-self:stretch;';
-      grp.appendChild(sep);
+      var costEl = document.createElement('span');
+      costEl.textContent = sk.cost;
+      costEl.style.cssText = 'font-size:12px;color:#666;' + COL.cost;
+      row.appendChild(costEl);
 
-      [1, 5, 10].forEach(function (n) {
-        var b = document.createElement('button');
-        b.textContent = '-' + n;
-        b.type = 'button';
-        b.style.cssText = M + 'background:#141414;border:1px solid #3a3a3a;color:#666;'
-          + 'font-size:11px;padding:3px 8px;cursor:pointer;';
-        b.addEventListener('click', function () { for (var i = 0; i < n; i++) downskill(sk.id); refresh(); });
-        grp.appendChild(b);
-      });
+      var maxEl = document.createElement('span');
+      maxEl.textContent = sk.max;
+      maxEl.style.cssText = 'font-size:12px;color:#555;' + COL.max;
+      row.appendChild(maxEl);
 
-      row.appendChild(grp);
+      var nameEl = document.createElement('span');
+      nameEl.textContent = sk.name;
+      nameEl.style.cssText = 'font-size:13px;color:#aaa;' + COL.name;
+      row.appendChild(nameEl);
+
       list.appendChild(row);
     });
     ov.appendChild(list);
